@@ -56,6 +56,12 @@ open class ButtonBarView: UICollectionView {
             updateSelectedBarYPosition()
         }
     }
+    var centerContent: Bool = true
+    var customContentOffset: CGFloat {
+        get {
+            return centerContent ? -(UIScreen.main.bounds.width - contentSize.width)/2 : 0
+        }
+    }
     var selectedBarVerticalAlignment: SelectedBarVerticalAlignment = .bottom
     var selectedBarAlignment: SelectedBarAlignment = .center
     var selectedIndex = 0
@@ -102,7 +108,7 @@ open class ButtonBarView: UICollectionView {
 
         selectedBar.frame = CGRect(x: targetFrame.origin.x, y: selectedBar.frame.origin.y, width: targetFrame.size.width, height: selectedBar.frame.size.height)
 
-        var targetContentOffset: CGFloat = 0.0
+        var targetContentOffset: CGFloat = customContentOffset
         if contentSize.width > frame.size.width {
             let toContentOffset = contentOffsetForCell(withFrame: toFrame, andIndex: toIndex)
             let fromContentOffset = contentOffsetForCell(withFrame: fromFrame, andIndex: fromIndex)
@@ -138,7 +144,8 @@ open class ButtonBarView: UICollectionView {
 
     private func updateContentOffset(animated: Bool, pagerScroll: PagerScroll, toFrame: CGRect, toIndex: Int) {
         guard pagerScroll != .no || (pagerScroll != .scrollOnlyIfOutOfScreen && (toFrame.origin.x < contentOffset.x || toFrame.origin.x >= (contentOffset.x + frame.size.width - contentInset.left))) else { return }
-        let targetContentOffset = contentSize.width > frame.size.width ? contentOffsetForCell(withFrame: toFrame, andIndex: toIndex) : 0
+        let offset = customContentOffset
+        let targetContentOffset = contentSize.width > frame.size.width ? contentOffsetForCell(withFrame: toFrame, andIndex: toIndex) : offset
         setContentOffset(CGPoint(x: targetContentOffset, y: 0), animated: animated)
     }
 
