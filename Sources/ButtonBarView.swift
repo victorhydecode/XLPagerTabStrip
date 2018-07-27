@@ -57,7 +57,7 @@ open class ButtonBarView: UICollectionView {
         }
     }
     var centerContent: Bool = true
-    var customContentOffset: CGFloat {
+    public var customContentOffset: CGFloat {
         get {
             return centerContent ? -(UIScreen.main.bounds.width - contentSize.width)/2 : 0
         }
